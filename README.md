@@ -24,6 +24,7 @@ git clone https://github.com/infosave2007/amneziavpnphp.git
 cd amneziavpnphp
 cp .env.example .env
 docker compose up -d
+docker compose exec web composer install
 ```
 
 Access: http://localhost:8082
@@ -112,7 +113,7 @@ DELETE /api/clients/{id}/delete     - Delete client by ID
 
 Add OpenRouter API key in Settings, then run:
 ```bash
-docker compose exec app php bin/translate_all.php
+docker compose exec web php bin/translate_all.php
 ```
 
 Or translate via web interface: Settings → Auto-translate
