@@ -18,14 +18,14 @@ class JWT {
             return self::$secretKey;
         }
         
-        // Опционально: читаем из переменной окружения (если передана и достаточно длинная)
+        // Optional: read from environment variable if present and sufficiently long
         $envKey = getenv('JWT_SECRET');
         if ($envKey && strlen($envKey) >= 32) {
             self::$secretKey = $envKey;
             return self::$secretKey;
         }
         
-        // Единая корректная схема: settings(namespace='security', key='jwt_secret', value JSON)
+        // Unified schema: settings(namespace='security', key='jwt_secret', JSON value)
         $pdo = DB::conn();
         $stmt = $pdo->prepare('SELECT value FROM settings WHERE namespace = ? AND `key` = ? LIMIT 1');
         $stmt->execute(['security', 'jwt_secret']);
@@ -40,7 +40,7 @@ class JWT {
             }
         }
         
-        // Если секрета нет — создаём и сохраняем по новой схеме
+        // If no secret exists, generate and save using the unified schema
         $newKey = bin2hex(random_bytes(32));
         $stmt = $pdo->prepare('INSERT INTO settings (user_id, namespace, `key`, value) VALUES (NULL, ?, ?, ?) ON DUPLICATE KEY UPDATE value = VALUES(value)');
         $stmt->execute(['security', 'jwt_secret', json_encode($newKey)]);
