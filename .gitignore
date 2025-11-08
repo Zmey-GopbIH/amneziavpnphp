@@ -39,3 +39,4 @@ build/
 # Backups
 *.bak
 backup/
+backups/
